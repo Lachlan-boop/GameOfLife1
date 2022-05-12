@@ -17,11 +17,12 @@ public class Game : MonoBehaviour
 
     public bool simulationEnabled = false;
 
-    public int evolutionCounter = 0;
-
-    public int placedCount = 0;
-    public int deathCount = 0;
-    public int bornCount = 0;
+    //establish counters
+    int evolutionCounter = 0;
+    int placedCount = 0;
+    int deathCount = 0;
+    int bornCount = 0;
+    int presetsUsed = 0;
 
     //string[] counterArray = { "Evolutions: ", "Placed Cells: ", "Cells Killed: ", "Cells Born: " };
     string[] counterArray;
@@ -29,9 +30,13 @@ public class Game : MonoBehaviour
 
     Cell[,] grid = new Cell[SCREEN_WIDTH, SCREEN_HEIGHT];
 
+    //public LevelLoader LevelLoader;
+
+
     // Start is called before the first frame update
     void Start()
     {
+
         fileName = "history.txt";
         myFilePath = Application.dataPath + "/" + fileName;
 
@@ -43,13 +48,15 @@ public class Game : MonoBehaviour
                 Cell cell = Instantiate(Resources.Load("Prefabs/Cell", typeof(Cell)), new Vector2(x, y), Quaternion.identity) as Cell;
                 grid[x, y] = cell;
                 grid[x, y].SetAlive(false);
-                placedCount++;
 
             }
         }
 
-        PlaceCells(3);
+        PlaceCells(1);
     }
+    
+        
+    
 
     //public void StartGame()
     //{
@@ -106,23 +113,50 @@ public class Game : MonoBehaviour
 
         if (val == 1)
         {
-            PlaceCells(1);
+            PlaceCells(2);
+            presetsUsed++;
         }
 
         if (val == 2)
         {
-            PlaceCells(2);
+            ResetGrid();
+            PlaceCells(3);
+            placedCount = placedCount + 5;
+            presetsUsed++;
         }
 
         if (val == 3)
         {
-            PlaceCells(3);
+            ResetGrid();
+            PlaceCells(7);
+            placedCount = placedCount + 25;
+            presetsUsed++;
         }
 
         if (val == 4)
         {
+            ResetGrid();
             PlaceCells(4);
+            placedCount = placedCount + 7;
+            presetsUsed++;
         }
+
+        if (val == 5)
+        {
+            ResetGrid();
+            PlaceCells(5);
+            placedCount = placedCount + 8;
+            presetsUsed++;
+        }
+
+        if (val == 6)
+        {
+            ResetGrid();
+            PlaceCells(val);
+            placedCount = placedCount + 222;
+            presetsUsed++;
+        }
+ 
 
     }
     public void UserInput()
@@ -134,13 +168,20 @@ public class Game : MonoBehaviour
             int x = Mathf.RoundToInt(mousePoint.x);
             int y = Mathf.RoundToInt(mousePoint.y);
 
+            
             if (x >= 0 && y >= 0 && x < SCREEN_WIDTH && y < SCREEN_HEIGHT)
             {
                 // We are in bounds
-                grid[x, y].SetAlive(!grid[x, y].isAlive);
-                placedCount++;
+                if (!EventSystem.current.IsPointerOverGameObject())
+                {
+                    grid[x, y].SetAlive(!grid[x, y].isAlive);
+                    placedCount++;
+                }
+                 
             }
         }
+
+        
         if (Input.GetKeyUp(KeyCode.Backspace))
         {
             //Pause Simulation
@@ -152,10 +193,30 @@ public class Game : MonoBehaviour
             //Build simulation / resume
             simulationEnabled = true;
         }
+
+        if (Input.GetKey(KeyCode.R))
+        {
+            ResetGrid();
+        }
+    }
+
+    public void ResetGrid()
+    {
+        for (int y = 0; y < SCREEN_HEIGHT; y++)
+        {
+            for (int x = 0; x < SCREEN_WIDTH; x++)
+            {
+                if (y <= SCREEN_HEIGHT || x <= SCREEN_WIDTH)
+                {
+                    grid[x, y].SetAlive(false);
+                }
+            }
+        }
     }
 
     public void PlaceCells(int type)
     {
+
         if(type == 1)
         {
             for (int y = 0; y < SCREEN_HEIGHT; y++)
@@ -165,7 +226,9 @@ public class Game : MonoBehaviour
                     grid[x, y].SetAlive(false);
                 }
             }
-                }
+        }
+
+        //Random
         if (type == 2)
         {
             for (int y = 0; y < SCREEN_HEIGHT; y++)
@@ -191,7 +254,7 @@ public class Game : MonoBehaviour
                 {
                     if (x != 33)
                     {
-                        if (y == 21 || y == 23 && (x ==31) || y == 22 && (x == 32))
+                        if (y == 21 || y == 23 && (x == 31) || y == 22 && (x == 32))
                         {
                             grid[x, y].SetAlive(true);
                         }
@@ -200,17 +263,92 @@ public class Game : MonoBehaviour
             }
         }
 
+        //acorn
         if (type == 4)
         {
-            for (int y = 0; y < SCREEN_HEIGHT; y++)
+            for (int y = 21; y < 24; y++)
             {
-                for(int x = 0; x < SCREEN_WIDTH; x++)
+                for (int x = 43; x < 50; x++)
                 {
-                    grid[x, y].SetAlive(false);
+                    if (x != 50)
+                    {
+                        if (y == 21 && (x != 45) && (x != 46)|| y == 23 && (x == 44) || y == 22 && (x == 46))
+                        {
+                            grid[x, y].SetAlive(true);
+                        }
+                    }
                 }
             }
-            
         }
+
+        //cap
+        if (type == 5)
+        {
+            for (int y = 21; y < 24; y++)
+            {
+                for (int x = 29; x < 33; x++)
+                {
+                    if (y == 21 || y == 22 && (x != 30) && (x != 31) || y == 23 && (x != 29) && (x != 32))
+                    {
+                        grid[x, y].SetAlive(true);
+                    }
+  
+                }
+            }
+        }
+
+        //boundary 
+        if (type == 6)
+        { 
+            for (int y = 0; y < SCREEN_HEIGHT; y++)
+            {
+                for (int x = 0; x < SCREEN_WIDTH; x++)
+                {
+                    if (y == 0 || y == SCREEN_HEIGHT - 1 || x == 0 || x == SCREEN_WIDTH - 1)
+                    {
+                        grid[x, y].SetAlive(true);
+                    }
+                }
+            }
+        }
+
+        //Crab
+        if (type == 7)
+        {
+            for (int y = 0; y < 13; y++)
+            {
+                for (int x = 50; x < 64; x++)
+                {
+                    
+                    if (y == 0 && (x == 55 || x == 56) || y == 1 && (x == 55 || x == 56 || x == 59))
+                    {
+                        grid[x, y].SetAlive(true);
+                    }
+
+                    else if (y == 2 && (x == 53 || x == 58 || x == 60) || y == 3 && (x == 51 || x == 52 || x == 58))
+                    {
+                        grid[x, y].SetAlive(true);
+                    }
+
+                    else if (y == 4 && (x == 52 || x == 53 || x == 59 || x == 60) || y == 5 && (x == 60 || x == 63))
+                    {
+                        grid[x, y].SetAlive(true);
+                    }
+
+                    else if (y == 7 && (x == 61) || y == 8 && (x == 62 || x == 63) || y == 9 && (x == 60))
+                    {
+                        grid[x, y].SetAlive(true);
+                    }
+
+                    else if (y == 10 && (x == 58 || x == 59) || y == 11 && (x == 59 || x == 60))
+                    {
+                        grid[x, y].SetAlive(true);
+                    }
+                    
+                }
+            }
+        }
+
     }
 
     public void PlayPause(Image image)
@@ -338,27 +476,20 @@ public class Game : MonoBehaviour
                         bornCount++;
                     }
                 }
+
+                /*if (y == 1 || y == SCREEN_HEIGHT - 1 || x == 1 || x == SCREEN_WIDTH - 1)
+                {
+
+                }*/
             }
         }
     }
-
-    /*bool RandomAliveCell()
-    {
-        int rand = UnityEngine.Random.Range(0, 100);
-
-        if (rand > 75)
-        {
-            return true;
-        }
-
-        return false;
-    }*/
 
    
     public void CreateFileWithHistory()
     {
         //build array
-        string[] counterArray = { $"Evolutions: {evolutionCounter} ", $"Placed Cells: {placedCount}", $"Cells Killed: {deathCount}", $"Cells Born: {bornCount}" };
+        string[] counterArray = { $"Placed Cells: {placedCount}", $"Evolutions: {evolutionCounter}", $"Cells Killed: {deathCount}", $"Cells Born: {bornCount}", $"Presets Used: {presetsUsed}" };
 
         //write local array to a txt file
         File.WriteAllLines(myFilePath, counterArray);

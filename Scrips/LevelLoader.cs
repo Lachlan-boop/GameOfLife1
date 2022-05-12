@@ -2,27 +2,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LevelLoader : MonoBehaviour
 {
-    public Animator transition;
+    //public Animator transition;
 
-    public float transitionTime = 1f;
+    //public float transitionTime = 1f;
 
     // Update is called once per frame
     //void Update()
     //{
-       // if(Input.GetMouseButtonDown(0))
-        //{
-            //LoadNextLevel();
-       // }
-   // }
+    // if(Input.GetMouseButtonDown(0))
+    //{
+    //LoadNextLevel();
+    // }
+    // }
 
-    public void LoadGame()
+    public bool GreenActive;
+    public bool BlueActive;
+    public bool PurpleActive;
+
+    public GameObject gameCamera;
+    Camera camera;
+
+    private void Start()
     {
+        camera = gameCamera.GetComponent<Camera>();
+    }
+
+    public void LoadGame(Image image)
+    {
+        camera.backgroundColor = image.color;
         SceneManager.LoadScene("GameOfLife");
         //StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex + 1));
+        BlueActive = true;
         
+
     }
 
     public void LoadStartScreen()
@@ -30,17 +46,23 @@ public class LevelLoader : MonoBehaviour
         SceneManager.LoadScene("SampleScene");
     }
 
-    public void LoadGamePurple()
+    public void LoadGamePurple(Image image)
     {
-        SceneManager.LoadScene("GamePurple");
+        camera.backgroundColor = image.color;
+        SceneManager.LoadScene("GameOfLife");
+        PurpleActive = true;
+        
     }
 
-    public void GameGreen()
+    public void GameGreen(Image image)
     {
-        SceneManager.LoadScene("GameGreen");
+        camera.backgroundColor = image.color;
+        SceneManager.LoadScene("GameOfLife");
+        GreenActive = true;
+        
     }
 
-    IEnumerator LoadLevel(int levelIndex)
+    /*IEnumerator LoadLevel(int levelIndex)
     {
         //Play animation
         transition.SetTrigger("Start");
@@ -50,6 +72,51 @@ public class LevelLoader : MonoBehaviour
 
         //Load Scene
         SceneManager.LoadScene(levelIndex);
+    }*/
+
+    void Update ()
+    {
+        //mainCamera.SetActive(false);
+        //greenCamera.SetActive(false);
+        //purpleCamera.SetActive(false);
+
+        /*if (BlueActive == true)
+        {
+            GreenActive = false;
+            PurpleActive = false;
+
+            //purpleCamera.SetActive(false);
+            //greenCamera.SetActive(false);
+            mainCamera.SetActive(true);
+        }
+
+        else if (GreenActive == true)
+        {
+            BlueActive = false;
+            PurpleActive = false;
+
+            //mainCamera.SetActive(false);
+            //purpleCamera.SetActive(false);
+            Destroy(mainCamera.gameObject);
+            Destroy(purpleCamera.gameObject);
+            greenCamera.SetActive(true);
+        }
+
+        else if (PurpleActive == true)
+        {
+            BlueActive = false;
+            GreenActive = false;
+
+            greenCamera.SetActive(false);
+            mainCamera.SetActive(false);
+            purpleCamera.SetActive(true);
+        }
+       */
+    }
+
+    public void DontDestroyOnLoad()
+    {
+        DontDestroyOnLoad(gameObject);
     }
 
     public void QuitGame()
