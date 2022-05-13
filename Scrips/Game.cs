@@ -1,3 +1,10 @@
+// Final/most current version of code
+// Includes:
+// Working game UI
+// Selectable Presets
+// Updated instructions
+
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,9 +14,11 @@ using UnityEngine.EventSystems;
 
 public class Game : MonoBehaviour
 {
+    //- 1024 pixels
+    private static int SCREEN_WIDTH = 64;
 
-    private static int SCREEN_WIDTH = 64;   //- 1024 pixels
-    private static int SCREEN_HEIGHT = 48;  //- 768 pixels
+    //- 768 pixels
+    private static int SCREEN_HEIGHT = 48;  
 
     public float speed = 0.1f;
 
@@ -174,6 +183,7 @@ public class Game : MonoBehaviour
                 // We are in bounds
                 if (!EventSystem.current.IsPointerOverGameObject())
                 {
+                    // mouse is not over UI element
                     grid[x, y].SetAlive(!grid[x, y].isAlive);
                     placedCount++;
                 }
