@@ -33,7 +33,6 @@ public class Game : MonoBehaviour
     int bornCount = 0;
     int presetsUsed = 0;
 
-    //string[] counterArray = { "Evolutions: ", "Placed Cells: ", "Cells Killed: ", "Cells Born: " };
     string[] counterArray;
     string myFilePath, fileName;
 
@@ -63,34 +62,7 @@ public class Game : MonoBehaviour
 
         PlaceCells(1);
     }
-    
-        
-    
-
-    //public void StartGame()
-    //{
-    //    simulationEnabled = true;
-    //}
-
-    //public void PauseGame()
-    //{
-    //    simulationEnabled = false;
-
-        //test evolution counter:
-        //Debug.Log(evolutionCounter);
-        //success
-
-        //test death count:
-        //Debug.Log(deathCount);
-        //success
-
-        //test born count
-        //Debug.Log(bornCount);
-        //success
-
-        //test placed count
-        //Debug.Log(placedCount);
-    //}
+   
 
     // Update is called once per frame
     public void Update()
@@ -486,11 +458,6 @@ public class Game : MonoBehaviour
                         bornCount++;
                     }
                 }
-
-                /*if (y == 1 || y == SCREEN_HEIGHT - 1 || x == 1 || x == SCREEN_WIDTH - 1)
-                {
-
-                }*/
             }
         }
     }
@@ -498,8 +465,15 @@ public class Game : MonoBehaviour
    
     public void CreateFileWithHistory()
     {
+        // 
+        string historyOne = $"Placed Cells: {placedCount}";
+        string historyTwo = $"Evolutions: {evolutionCounter}";
+        string historyThree = $"Cells Killed: {deathCount}";
+        string historyFour = $"Cells Born: {bornCount}";
+        string historyFive = $"Presets Used: {presetsUsed}";
+
         //build array
-        string[] counterArray = { $"Placed Cells: {placedCount}", $"Evolutions: {evolutionCounter}", $"Cells Killed: {deathCount}", $"Cells Born: {bornCount}", $"Presets Used: {presetsUsed}" };
+        string[] counterArray = { historyOne, historyTwo, historyThree, historyFour, historyFive };
 
         //write local array to a txt file
         File.WriteAllLines(myFilePath, counterArray);
